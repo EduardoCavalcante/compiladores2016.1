@@ -1,0 +1,20 @@
+/* 
+    Created on : 21/02/2016, 00:41:48
+    Author     : joaoeduardodesousacavalcante
+*/
+
+.show{
+    display: block;
+}
+
+.hidden{
+    display: none;
+}
+
+.visible {
+    visibility: visible;
+}
+
+.invisible {
+    visibility: hidden;
+}

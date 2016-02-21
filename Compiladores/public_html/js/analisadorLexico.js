@@ -1,11 +1,3 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
-
   //Construindo uma tabela de símbolos: !!VE AI CDS SE DA PRA USAR ALGUMA COISA!
   var tabelaSimbolos = document.createElement("table");
   var cabecalho = document.createElement("thead");
@@ -81,48 +73,6 @@
 
    
   }
-
-function helloWord(){
-
-	if(document.getElementById("analisadorLexico")){
-		var contentAnalisadorLexico = document.getElementById("analisadorLexico");
-
-		contentAnalisadorLexico.innerHTML = "helloWord";
-
-	}
-}
-/*
-var analisadorLexico = {
-
-	parser : function(){
-		alert("parser analisadorLexico");
-	}
-} */
-
-var analisadorLexico = new Object();
-
-analisadorLexico.lines = ['a','b','c'];
-
-
-analisadorLexico.parser = function(){
-	alert("lines : " + analisadorLexico.lines);
-}
-
-analisadorLexico.addLines = function(lines){
-
-	if(typeof lines == "object"){
-		lines.push("new...");
-	}
-
-}
-
-analisadorLexico.removeLines = function(lines){
-
-	if(typeof lines == "object"){
-		lines.pop();
-	}
-
-}
 
 
 
