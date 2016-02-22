@@ -15,7 +15,8 @@ file.reader = function () {
 file.splitLines = function (content) {
     file.lines = content.split("\n");
     console.log(file.lines);
-    document.getElementById("analisadores").className = "show";
+    document.getElementById("formAnalyzers").className = "show";
+    document.getElementById("analyserEmpty").className = "hidden";
 };
 
 file.readSingleFile = function (evt) {
@@ -26,7 +27,7 @@ file.readSingleFile = function (evt) {
         r.onload = function (e) {
             var contents = e.target.result;
             file.splitLines(contents);
-            
+
         };
         r.readAsText(f);
     } else {

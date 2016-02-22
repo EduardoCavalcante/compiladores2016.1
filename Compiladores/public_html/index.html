@@ -8,34 +8,41 @@ and open the template in the editor.
     <head>
         <!-- <script src="js/analisadorLexico.js" type="text/javascript"></script> -->
         <script src="js/file.js" type="text/javascript"></script>
-        
+        <script src="js/analisadorLexico.js" type="text/javascript"></script>
+        <script src="js/index.js" type="text/javascript"></script>
+
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
 
     </head>
 
     <body>
-        <h1>test</h1>
-
         <div id="content">
 
             <label for="fileinput">Selecione o arquivo a ser carregado : </label> <input type="file" id="fileinput"  /> 
 
-            <ul id="analisadores" class="hidden">
-                <li>
-                    <input type="checkbox" id="analisadorLexico" name="analisador" />
-                    <label for="analisadorLexico">Analisador Lexico</label>
-                </li>
+            <form id="formAnalyzers" onsubmit="selectAnalyzer(event)" class="hidden">
+                <ul id="analisadores">
+                    <li>
+                        <input type="checkbox" id="lexicalAnalyzer" value="lexicalAnalyzer" name="analyzer" />
+                        <label for="lexicalAnalyzer">Analisador Lexico</label>
+                    </li>
 
-                <li>
-                    <input type="checkbox" id="analisadorSintatico"  name="analisador" />
-                    <label for="analisadorSintatico">Analisador Sintatico</label>
-                </li>
+                    <li>
+                        <input type="checkbox" id="syntacticAnalyzer" value="syntacticAnalyzer"  name="analyzer" />
+                        <label for="syntacticAnalyzer">Analisador Sintatico</label>
+                    </li>
 
-                <li>
-                    <input type="checkbox" id="analisadorSemantico" name="analisador"/>
-                    <label for="analisadorSemantico">Analisador Semantico</label>
-                </li>
-            </ul>
+                    <li>
+                        <input type="checkbox" id="semanticAnalyzer" value="semanticAnalyzer" name="analyzer"/>
+                        <label for="semanticAnalyzer">Analisador Semantico</label>
+                    </li>
+                </ul>
+
+                <span id="analyserEmpty" class="hidden">Selecione um analisador!</span>
+
+                <input type="submit" value="Ok" />
+
+            </form>
 
         </div>
 
