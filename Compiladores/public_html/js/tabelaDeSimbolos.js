@@ -94,13 +94,13 @@ typeSpecifier = {
 		description : "divisao",
 	},
 
-	'/*' : {
+		'/*' : {
 		nome : "/",
 		type : "specialSymbol",
 		description : "inicio do comentario",
 	},	
 
-	'*/' : {
+		'*/' : {
 		nome : "/",
 		type : "specialSymbol",
 		description : "fim do comentario",
