@@ -1,3 +1,2 @@
 int i = 0;
-char j = 'ana';
-float x = 1.2;
+String j = 'ana';

@@ -15,6 +15,9 @@ function selectAnalyzer(event) {
                     var currentAnalyzer = analyzers[i];
                     if (currentAnalyzer.checked) {
                         console.log("selected : " + currentAnalyzer.value);
+                        if(lexicalAnalyzer){
+                            analisadorLexico.initialize();
+                        }
                         document.getElementById("analyserEmpty").className = "hidden";
                         withoutAnalyzers = false;
                     }
