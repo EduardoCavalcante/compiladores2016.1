@@ -3,12 +3,12 @@ var typeSpecifier = typeSpecifier || {};
 
 typeSpecifier = {
 	
-	'int' : {
+		'int' : {
 		nome : "int",
 		type : "typeSpecifier",
 		description : "numeric...",		
 	},
-	'String' : {
+		'String' : {
 		nome : "String",
 		type : "typeSpecifier",
 		description : "text...",	
@@ -19,8 +19,7 @@ typeSpecifier = {
 		type : "specialSymbol",
 		description : "abre chochetes...",
 		nextSimbol : ["]"],
-	},
-	
+	},	
 	']' : {
 		nome : "]",
 		type : "specialSymbol",
@@ -28,55 +27,55 @@ typeSpecifier = {
 		nextSimbol : ["["],
 	},
 
-	'{' : {
+		'{' : {
 		nome : "{",
 		type : "specialSymbol",
 		description : "abre chaves",
 		nextSimbol : ["}"],
 	},
 	
-	'}' : {
+		'}' : {
 		nome : "}",
 		type : "specialSymbol",
 		description : "fecha chaves",
 		nextSimbol : ["{"],
 	},
-	';' : {
+		';' : {
 		nome : ";",
 		type : "specialSymbol",
 		description : "finalizador de linha",
 	},
-	'=' : {
+		'=' : {
 		nome : "=",
 		type : "specialSymbol",
 		description : "atribuicao",
 	},
-	'==' : {
+		'==' : {
 		nome : "==",
 		type : "Special symbols",
 		description : "comparacao",
 	},
-	'>=' : {
+		'>=' : {
 		nome : ">=",
 		type : "Special symbols",
 		description : "maior ou igual",
 	},
-	'<=' : {
+		'<=' : {
 		nome : "<=",
 		type : "Special symbols",
 		description : "menor ou igual",
 	},
-	'+' : {
+		'+' : {
 		nome : "+",
 		type : "addop",
 		description : "soma",
 	},
-	'-' : {
+		'-' : {
 		nome : "-",
 		type : "addop",
 		description : "subtracao",
 	},
-	'\'' : {
+		'\'' : {
 		nome : '\'',
 		type : "specialSymbol",
 		description : "aspas simples",
