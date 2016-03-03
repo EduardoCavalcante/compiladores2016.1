@@ -14,7 +14,6 @@ function selectAnalyzer(event) {
                 for (var i = 0; i < analyzers.length; i++) {
                     var currentAnalyzer = analyzers[i];
                     if (currentAnalyzer.checked) {
-                        console.log("selected : " + currentAnalyzer.value);
                         if(lexicalAnalyzer){
                             analisadorLexico.initialize();
                         }

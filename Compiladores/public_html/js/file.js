@@ -14,7 +14,6 @@ file.reader = function () {
 
 file.splitLines = function (content) {
     file.lines = content.split("\n");
-    console.log(file.lines);
     document.getElementById("formAnalyzers").className = "show";
     document.getElementById("analyserEmpty").className = "hidden";
 };

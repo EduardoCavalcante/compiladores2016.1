@@ -15,27 +15,31 @@ typeSpecifier = {
 	},
 
 	'[' : {
-		nome : "{",
+		nome : "[",
 		type : "specialSymbol",
 		description : "abre chochetes...",
+		nextSimbol : ["]"],
 	},
 	
 	']' : {
-		nome : "}",
+		nome : "]",
 		type : "specialSymbol",
 		description : "fechaChochetes...",
+		nextSimbol : ["["],
 	},
 
 	'{' : {
 		nome : "{",
 		type : "specialSymbol",
 		description : "abre chaves",
+		nextSimbol : ["}"],
 	},
 	
 	'}' : {
 		nome : "}",
 		type : "specialSymbol",
 		description : "fecha chaves",
+		nextSimbol : ["{"],
 	},
 	';' : {
 		nome : ";",
@@ -76,34 +80,38 @@ typeSpecifier = {
 		nome : '\'',
 		type : "specialSymbol",
 		description : "aspas simples",
+		ocorrenciasMin : 2,
 	},
 		'"' : {
 		nome : '"',
 		type : "specialSymbol",
 		description : "aspas dupla",
+		ocorrenciasMin : 2,
 	},
 
 		'*' : {
 		nome : "*",
 		type : "addop",
-		description : "soma",
+		description : "multiplicacao",
 	},
 	'/' : {
 		nome : "/",
 		type : "addop",
-		description : "subtracao",
+		description : "divisao",
 	},
 
 	'/*' : {
-		nome : "/",
+		nome : "/*",
 		type : "specialSymbol",
 		description : "inicio do comentario",
+		nextSimbol : ["*/"],
 	},	
 
 	'*/' : {
-		nome : "/",
+		nome : "*/",
 		type : "specialSymbol",
 		description : "fim do comentario",
+		nextSimbol : ["/*"],
 	},
 
 }
