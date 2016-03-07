@@ -2,6 +2,7 @@
 
 <html>
     <head>
+         <meta charset="UTF-8">
         <script src="js/file.js" type="text/javascript"></script>
         <script src="js/tabelaDeSimbolos.js" type="text/javascript"></script>
         <script src="js/analisadorLexico.js" type="text/javascript"></script>
@@ -20,7 +21,7 @@
                 <ul id="analisadores">
                     <li>
                         <input type="checkbox" id="lexicalAnalyzer" value="lexicalAnalyzer" name="analyzer" />
-                        <label for="lexicalAnalyzer">Analisador Lexico</label>
+                        <label for="lexicalAnalyzer">Analisador Léxico</label>
                     </li>
 
                     <li>
@@ -30,7 +31,7 @@
 
                     <li>
                         <input type="checkbox" id="semanticAnalyzer" value="semanticAnalyzer" name="analyzer"/>
-                        <label for="semanticAnalyzer">Analisador Semantico</label>
+                        <label for="semanticAnalyzer">Analisador Semântico</label>
                     </li>
                 </ul>
 
@@ -39,6 +40,25 @@
                 <input type="submit" value="Ok" />
 
             </form>
+
+            <table id="tabelaDeSimbolos">
+                    <thead>
+                        <th>Simbolo</th>
+                        <th>Type</th>
+                        <th>Descrição</th>
+                        <th>Ocorrencias</th>
+                        <th>Linha</th>
+                    </thead>
+
+                    <tbody>
+
+                    </tbody>
+
+            </table>
+
+            <div id="notificacoes">
+                
+            </div>
 
         </div>
 

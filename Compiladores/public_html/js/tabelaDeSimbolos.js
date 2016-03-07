@@ -3,12 +3,12 @@ var typeSpecifier = typeSpecifier || {};
 
 typeSpecifier = {
 	
-		'int' : {
+	'int' : {
 		nome : "int",
 		type : "typeSpecifier",
 		description : "numeric...",		
 	},
-		'String' : {
+	'String' : {
 		nome : "String",
 		type : "typeSpecifier",
 		description : "text...",	
@@ -54,6 +54,17 @@ typeSpecifier = {
 		nome : "==",
 		type : "Special symbols",
 		description : "comparacao",
+
+	},
+		'>' : {
+		nome : ">",
+		type : "Special symbols",
+		description : "maior",
+	},
+		'<' : {
+		nome : "<",
+		type : "Special symbols",
+		description : "menor",
 	},
 		'>=' : {
 		nome : ">=",

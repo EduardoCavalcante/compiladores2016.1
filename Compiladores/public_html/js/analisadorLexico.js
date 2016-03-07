@@ -1,5 +1,77 @@
 var analisadorLexico = {} || analisadorLexico;
 
+// cria as linhas a tabela de caracteres
+
+analisadorLexico.printLines = function(){
+
+	var table = document.getElementById("tabelaDeSimbolos");
+
+	var tbody = table.getElementsByTagName("tbody")[0];
+
+	while(tbody.firstElementChild){
+		tbody.removeChild(tbody.firstElementChild)
+	}
+
+	analisadorLexico.tokens.forEach(function(currentLine){
+		var line = analisadorLexico.tokens.indexOf(currentLine);  
+	  	currentLine.forEach(function(token){
+
+	  		if(line == analisadorLexico.tabelaDeSimbolos[token.nome].line[0]){
+
+		  		var tr = document.createElement("TR");
+		  		
+		  		var tdSimbolo = document.createElement("td");
+		  		tdSimbolo.innerHTML = token.nome;
+
+		  		var tdType = document.createElement("td");
+		  		tdType.innerHTML = token.type;
+
+		  		var tdDescricao = document.createElement("td");
+		  		tdDescricao.innerHTML = token.description;
+
+		  		var tdLinha = document.createElement("td");
+
+		  		 tdLinha.innerHTML = analisadorLexico.tabelaDeSimbolos[token.nome] && 
+		  		 analisadorLexico.tabelaDeSimbolos[token.nome].line ? analisadorLexico.tabelaDeSimbolos[token.nome].line.join() : "";
+		  		
+		  		var tdOcorrencias = document.createElement("td");
+		  		tdOcorrencias.innerHTML = analisadorLexico.tabelaDeSimbolos[token.nome] && 
+		  		analisadorLexico.tabelaDeSimbolos[token.nome].ocorrencias;
+
+		  		tr.appendChild(tdSimbolo);
+		  		tr.appendChild(tdType);
+		  		tr.appendChild(tdDescricao);
+		  		tr.appendChild(tdOcorrencias);
+		  		tr.appendChild(tdLinha);
+		  		tbody.appendChild(tr);
+	  		}
+
+	  	});	  			  
+	});
+
+}
+analisadorLexico.cleanNotifications = function(){
+	var notificacoes = document.getElementById("notificacoes");
+	while(notificacoes.firstElementChild){
+		notificacoes.removeChild(notificacoes.firstElementChild);
+	}
+};
+analisadorLexico.addNotifications = function(message){
+	
+	var notificacoes = document.getElementById("notificacoes");
+
+	var content = document.createElement("p");
+	content.innerHTML = message;
+
+	notificacoes.appendChild(content);
+
+}
+
+/* 
+1- busca se o caracter passado como parâmetro está presente  na tabela de simbolos.
+2- se o caracter estiver na tabela de simbolos é retornado o valor do mesmo na tabela de simbolos, em caso negativo
+é retornado o valor FALSE
+*/
 analisadorLexico.searchSymbol = function(caracter){
 
 	if(typeSpecifier[caracter]){
@@ -12,38 +84,63 @@ analisadorLexico.searchSymbol = function(caracter){
 analisadorLexico.findComentary = function(){
 	
 	analisadorLexico.tokens.forEach(function(contentLine){
-	var line = analisadorLexico.tokens.indexOf(contentLine);  	
-	  	for(var i = 0; i < contentLine.length;i++){
-			    if((i-1 >= 0) && ((contentLine[i-1].nome == "/" && contentLine[i].nome == "*") || (contentLine[i-1].nome == "*" && contentLine[i].nome == "/"))){
-			      var caracter = contentLine[i-1].nome + contentLine[i].nome;
-			      var value = analisadorLexico.searchSymbol(caracter); 
-			      if(value){
-			      	value.ocorrencias = 0;
-			      	value.contentLine = contentLine[i].line;
-			      	analisadorLexico.tokens[line].splice(i -1 , 2,value);	
-			      }
-			    }    
-		  }		  
+		var line = analisadorLexico.tokens.indexOf(contentLine);  	
+		  	for(var i = 0; i < contentLine.length;i++){
+				if((i-1 >= 0) && ((contentLine[i-1].nome == "/" && contentLine[i].nome == "*") 
+				|| (contentLine[i-1].nome == "*" && contentLine[i].nome == "/") 
+				|| (contentLine[i-1].nome == "<" && contentLine[i].nome == "=") || 
+				(contentLine[i-1].nome == ">" && contentLine[i].nome == "=")|| 
+				(contentLine[i-1].nome == "=" && contentLine[i].nome == "="))){
+				    var caracter = contentLine[i-1].nome + contentLine[i].nome;
+				    var token = analisadorLexico.searchSymbol(caracter); 
+				    if(token){
+				      	token.contentLine = contentLine[i].line;
+				      	var firstToken = analisadorLexico.tabelaDeSimbolos[contentLine[i].nome].line.indexOf(line);
+				      	var secondToken = analisadorLexico.tabelaDeSimbolos[contentLine[i - 1].nome].line.indexOf(line);
+
+				      	if(firstToken > -1){
+				      		analisadorLexico.tabelaDeSimbolos[contentLine[i].nome].line.splice(firstToken,1);
+				      	}
+				      	if(secondToken > -1){
+				      		analisadorLexico.tabelaDeSimbolos[contentLine[i - 1].nome].line.splice(secondToken,1);
+				      	}
+				      	
+				      	analisadorLexico.tabelaDeSimbolos[contentLine[i].nome].ocorrencias = analisadorLexico.tabelaDeSimbolos[contentLine[i].nome].ocorrencias - 1; 
+				      	analisadorLexico.tabelaDeSimbolos[contentLine[i -1].nome].ocorrencias = analisadorLexico.tabelaDeSimbolos[contentLine[i].nome].ocorrencias - 1; 
+
+				      	analisadorLexico.tokens[line].splice(i -1 , 2);
+				      	analisadorLexico.addToken(token,line);
+				      	i = i -1;
+				      }
+				}    
+			}		  
 	});
 
 }
 
-analisadorLexico.addToken = function(token,value,line){
+analisadorLexico.updateSymbolTable = function(token,line){
+
+	if(!analisadorLexico.tabelaDeSimbolos[token.nome]){
+			analisadorLexico.tabelaDeSimbolos[token.nome] = new Object();
+			analisadorLexico.tabelaDeSimbolos[token.nome].line = [];
+			analisadorLexico.tabelaDeSimbolos[token.nome].ocorrencias = 1;
+	}else{
+		analisadorLexico.tabelaDeSimbolos[token.nome].ocorrencias =  analisadorLexico.tabelaDeSimbolos[token.nome].ocorrencias + 1;
+	}
+	analisadorLexico.tabelaDeSimbolos[token.nome].line.push(line);
+}
+
+analisadorLexico.addToken = function(token,line){
+	
+	if(token){
 		
-		if(!value.ocorrencias){
-			value.ocorrencias = 1;	
-		}else{
-			value.ocorrencias  = value.ocorrencias + 1;
-		}
-		
-		if(value != null && typeof value == 'object'){
-			value.line = [];
-			value.line.push(line);	
+		analisadorLexico.updateSymbolTable(token,line);
+			
 			if(!analisadorLexico.tokens[line]){
 				analisadorLexico.tokens[line] = [];
 			}
-			analisadorLexico.tokens[line].push(value);
-		}
+			analisadorLexico.tokens[line].push(token);
+	}
 }
 
 analisadorLexico.findNextSimbol = function(character){
@@ -60,93 +157,96 @@ analisadorLexico.findNextSimbol = function(character){
 }
 
 analisadorLexico.findErrors = function(){
-	
+		
+	var _message = "";
+
 	analisadorLexico.tokens.forEach(function(currentLine){
 	  	
 	  	find = currentLine.forEach(function(token){
-	  		
-	  		if(token && token.nextSimbol != null && typeof token.nextSimbol != "undefined"){
-				var exist = analisadorLexico.findNextSimbol(token.nextSimbol);
-				if(!exist){
-					console.log("Erro o codigo contem o simbolo : " + token.nome + ", porem nao contem o simbolo : " + token.nextSimbol );
-				}
-			}
+			if(token){
 
-			if(token && token.ocorrenciasMin != null && typeof token.ocorrenciasMin != "undefined"){
-				if(token.ocorrencias < token.ocorrenciasMin ){
-					console.log("Erro o codigo contem o simbolo : " + token.nome + " apenas : " + token.ocorrencias + " vez");
+		  		if(token.nextSimbol){
+					var exist = analisadorLexico.findNextSimbol(token.nextSimbol);
+					if(!exist){
+						 analisadorLexico.addNotifications("Erro o codigo contem o simbolo : " + token.nome + ", porem nao contem o simbolo : " + token.nextSimbol);
+					}
+				}
+
+				if(token.type == "id"){
+					//analisadorLexico.incorrectToken();
+				}
+
+				if(token.ocorrenciasMin){
+					var ocorrencias = analisadorLexico.tabelaDeSimbolos[token.nome].ocorrencias;
+					if( ocorrencias < token.ocorrenciasMin ){
+						analisadorLexico.addNotifications("Erro o codigo contem o simbolo : " + token.nome + " apenas : " + ocorrencias + " vez");
+					}
 				}
 			}
 
 	  	});	  			  
+		
 	});
-	
+	console.log(_message);
 };
 analisadorLexico.findTokens = function(caracteresDaLinha,line){
 	var candidate = "";
-	var isVariable = false;
 
 	caracteresDaLinha.forEach(function(caracter){
+		var token = null;
 		if(analisadorLexico.searchSymbol(caracter) || caracter == " "){
 			
 			if(candidate.length > 0){
-				var value = isNaN(candidate) ? candidate : {nome : candidate ,type : "numeric",description : "numero"}
-				if(isVariable){
-					value = {name : candidate, type : 'variable', description : 'variavel'}	
-					isVariable = false;
-				}
-				analisadorLexico.addToken(candidate,value,line);
+				token = isNaN(candidate) ? {nome : candidate, type: 'id', description : 'id'} : {nome : candidate ,type : "numeric",description : "numero"}
+				analisadorLexico.addToken(token,line);
 			}	
 			
 			if(caracter != " "){
-				var value = analisadorLexico.searchSymbol(caracter);
-				analisadorLexico.addToken(caracter,value,line);
-				if(value.type == "typeSpecifier"){
-					isVariable = true;
-				}
+				token = analisadorLexico.searchSymbol(caracter);
+				analisadorLexico.addToken(token,line);
 			}
-				candidate = "";
+			
+			candidate = "";
+
 		}else{
+
 		candidate = candidate + caracter;
+	
 			if(analisadorLexico.searchSymbol(candidate)){
-				var value = analisadorLexico.searchSymbol(candidate);
-				if(value.type == "typeSpecifier"){
-					isVariable = true;
-				}
-				analisadorLexico.addToken(candidate,value,line);
+				token = analisadorLexico.searchSymbol(candidate);
+				
+				analisadorLexico.addToken(token,line);
 				candidate = "";
 			}
 		}
 	});
 }
 
-analisadorLexico.findCaracteres = function(content,line){
-	var caracteresDaLinha = [];
-	content.forEach(function(caracter){
-
-		if(typeof caracter == "string"){
-			caracteresDaLinha.push(caracter);
-			analisadorLexico.caracteres.push(caracter);
-		}
-		
-	});
-	analisadorLexico.findTokens(caracteresDaLinha,line);
-}
+/*
+ 1- percorre ás linas do arquivo em um forEach 
+ 2- quebra os caracteres da linha em um novo array chamado content
+ 3- chama o método findTokens (Linha 132)
+ 4 depois do forEach é chamado os métodos : findComentary( Linha ...),findErrors( Linha ...) e printLines( Linha ...)
+*/
 
 analisadorLexico.parser = function () {
 	var parts = [];
 	var line = 0;
 	file.lines.forEach(function(currentLine){
-		analisadorLexico.findCaracteres(currentLine.split(""),line);	
+		var content = currentLine.split("");
+		analisadorLexico.findTokens(content,line);	
 		line  = line + 1;		
 	});
 	analisadorLexico.findComentary();
 	analisadorLexico.findErrors();
-	
+	analisadorLexico.printLines();	
 };
-
+/*
+1- inicializa as listas de caracter e de tokens
+2- chama o método parser (Linha 177)
+*/
 analisadorLexico.initialize = function () {
-	analisadorLexico.caracteres = [];
+	analisadorLexico.tabelaDeSimbolos = [];
 	analisadorLexico.tokens = [];
 	analisadorLexico.parser();	
 };
