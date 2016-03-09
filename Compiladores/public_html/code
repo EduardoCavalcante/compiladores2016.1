@@ -1,5 +1,17 @@
-int i = 0;
+/* prog principal */
+int f,n;
 
-String j = 'ana';
+scanf(n);
 
-/* */  >= <= ===
+f = fat(n)
+
+printf('FAT =',F);
+/* funcao */
+
+function FAT(int i){
+	if(i == 1){
+		fat = 1
+	}else{
+		fat = i * FAT(i - 1);
+	}	
+}

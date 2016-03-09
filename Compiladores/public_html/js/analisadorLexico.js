@@ -145,21 +145,57 @@ analisadorLexico.addToken = function(token,line){
 
 analisadorLexico.findNextSimbol = function(character){
 	var find = [];	
-	
+	var error = false;
 	analisadorLexico.tokens.forEach(function(currentLine){
 	  	
 	  	find = currentLine.filter(function(token){
 	  		return token.nome == character;
-	  	});	  			  
+	  	});	 
+	  	 if(find.length > 0){
+	  	 	error = true;
+	  	 } 			  
 	});
 
-	 return find.length > 0;
+	return error;
+
+	
 }
+
+analisadorLexico.incorrectToken = function(token){
+
+	var _onlyLetter = /^[a-zA-Z]+$/;
+	var _isIncorrect = false;
+	if(!_onlyLetter.test(token.nome)){
+		_isIncorrect = true;
+		var _linesWithTOken = analisadorLexico.tabelaDeSimbolos[token.nome].line;
+
+		for(var i = 0; i < _linesWithTOken;i++){
+			var _line = _linesWithTOken[i];
+			if(_line){
+				var _listSingleQuotation = analisadorLexico.tokens[_line].filter(function(token){
+					return token.nome == '\'';
+				});
+				var _listQuotation = analisadorLexico.tokens[_line].filter(function(token){
+					return token.nome == '"';
+				});
+				if(_listSingleQuotation && (_listSingleQuotation.length> 0 && _listSingleQuotation.length < 2)){
+					_isIncorrect = false;
+				}else if(_listQuotation && (_listQuotation.length > 0 && _listQuotation.length < 2)){
+					_isIncorrect = false;
+				}
+			}
+		}
+
+	}	
+		
+	return _isIncorrect;
+	
+	
+};
+
 
 analisadorLexico.findErrors = function(){
 		
-	var _message = "";
-
 	analisadorLexico.tokens.forEach(function(currentLine){
 	  	
 	  	find = currentLine.forEach(function(token){
@@ -173,7 +209,9 @@ analisadorLexico.findErrors = function(){
 				}
 
 				if(token.type == "id"){
-					//analisadorLexico.incorrectToken();
+					if(analisadorLexico.incorrectToken(token)){
+						 analisadorLexico.addNotifications("o id com o valor : " + token.nome + " é inválido de acordo com as regras da BNF só é aceito ID com Letras!");
+					}
 				}
 
 				if(token.ocorrenciasMin){
@@ -187,7 +225,6 @@ analisadorLexico.findErrors = function(){
 	  	});	  			  
 		
 	});
-	console.log(_message);
 };
 analisadorLexico.findTokens = function(caracteresDaLinha,line){
 	var candidate = "";
@@ -197,12 +234,12 @@ analisadorLexico.findTokens = function(caracteresDaLinha,line){
 		if(analisadorLexico.searchSymbol(caracter) || caracter == " "){
 			
 			if(candidate.length > 0){
-				token = isNaN(candidate) ? {nome : candidate, type: 'id', description : 'id'} : {nome : candidate ,type : "numeric",description : "numero"}
+				token = isNaN(candidate) ? {nome : candidate.trim(), type: 'id', description : 'id'} : {nome : candidate ,type : "numeric",description : "numero"}
 				analisadorLexico.addToken(token,line);
 			}	
 			
 			if(caracter != " "){
-				token = analisadorLexico.searchSymbol(caracter);
+				token = analisadorLexico.searchSymbol(caracter.trim());
 				analisadorLexico.addToken(token,line);
 			}
 			
@@ -239,7 +276,7 @@ analisadorLexico.parser = function () {
 	});
 	analisadorLexico.findComentary();
 	analisadorLexico.findErrors();
-	analisadorLexico.printLines();	
+	analisadorLexico.printLines();
 };
 /*
 1- inicializa as listas de caracter e de tokens

@@ -56,6 +56,12 @@ typeSpecifier = {
 		description : "comparacao",
 
 	},
+	'!=' : {
+		nome : "!=",
+		type : "Special symbols",
+		description : "comparacao",
+
+	},
 		'>' : {
 		nome : ">",
 		type : "Special symbols",
@@ -122,6 +128,71 @@ typeSpecifier = {
 		type : "specialSymbol",
 		description : "fim do comentario",
 		nextSimbol : ["/*"],
+	},
+
+	'if' : {
+		nome : "if",
+		type : "specialSymbol",
+		description : "if",
+		
+	},
+
+	'else' : {
+		nome : "else",
+		type : "specialSymbol",
+		description : "else",
+		
+	},
+
+	',' : {
+		nome : ",",
+		type : "specialSymbol",
+		description : ",",
+		
+	},
+
+	'(' : {
+		nome : "(",
+		type : "specialSymbol",
+		description : "(",
+		nextSimbol : [")"],
+		
+	},
+
+
+	')' : {
+		nome : ")",
+		type : "specialSymbol",
+		description : ")",
+		nextSimbol : ["("],
+		
+	},
+
+	'printf' : {
+		nome : "printf",
+		type : "specialSymbol",
+		description : "printf",
+		
+	},
+
+
+	'scanf' : {
+		nome : "scanf",
+		type : "specialSymbol",
+		description : "scanf",
+		
+	},
+
+	'void' : {
+		nome : "void",
+		type : "specialSymbol",
+		description : "void",
+	},
+
+	'return' : {
+		nome : "return",
+		type : "specialSymbol",
+		description : "return",
 	},
 
 }
