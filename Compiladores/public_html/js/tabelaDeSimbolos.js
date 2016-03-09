@@ -132,14 +132,14 @@ typeSpecifier = {
 
 	'if' : {
 		nome : "if",
-		type : "specialSymbol",
+		type : "palavra reservada",
 		description : "if",
 		
 	},
 
 	'else' : {
 		nome : "else",
-		type : "specialSymbol",
+		type : "palavra reservada",
 		description : "else",
 		
 	},
@@ -170,7 +170,7 @@ typeSpecifier = {
 
 	'printf' : {
 		nome : "printf",
-		type : "specialSymbol",
+		type : "palavra reservada",
 		description : "printf",
 		
 	},
@@ -178,20 +178,20 @@ typeSpecifier = {
 
 	'scanf' : {
 		nome : "scanf",
-		type : "specialSymbol",
+		type : "palavra reservada",
 		description : "scanf",
 		
 	},
 
 	'void' : {
 		nome : "void",
-		type : "specialSymbol",
+		type : "palavra reservada",
 		description : "void",
 	},
 
 	'return' : {
 		nome : "return",
-		type : "specialSymbol",
+		type : "palavra reservada",
 		description : "return",
 	},
 
