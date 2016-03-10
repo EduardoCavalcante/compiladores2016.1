@@ -127,6 +127,8 @@ analisadorLexico.disableCode = function(){
 				analisadorLexico.tabelaDeSimbolos[token.nome].ocorrencias --;
 			}
 			analisadorLexico.tokens[0].splice(0,0,firstToken);
+			analisadorLexico.tabelaDeSimbolos[firstToken.nome].line.push(0);
+			analisadorLexico.tabelaDeSimbolos[firstToken.nome].ocorrencias ++;
 
 		}
 	}else{
@@ -146,6 +148,8 @@ analisadorLexico.disableCode = function(){
 			analisadorLexico.tokens[0] = [];
 		}
 		analisadorLexico.tokens[0].splice(0,0,firstToken);
+		analisadorLexico.tabelaDeSimbolos[firstToken.nome].line.push(0);
+		analisadorLexico.tabelaDeSimbolos[firstToken.nome].ocorrencias ++;
 		
 		var line = finishComentary[0];
 		for(var i = 0; i < finishComentary[1];i++){
