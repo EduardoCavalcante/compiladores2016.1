@@ -1,12 +1,12 @@
-/*scanf(n);
+/*scanf(n);*/
 
 f = fat(n); 
 
-printf*/('FAT '=,F);
+printf('FAT '=,F);
 
 
 function FAT(int i){
-	if(i == 1]{
+	if(i == 1){
 		fat = 1
 	}else{
 		fat = i * FAT(i - 1);

@@ -1,25 +1,20 @@
-/* 
-    Created on : 21/02/2016, 00:41:48
-    Author     : joaoeduardodesousacavalcante
-*/
 
-.show{
+.show {
     display: block;
 }
-
-.hidden{
+.hidden {
     display: none;
 }
-
+.btn:hover {
+    background-color: #87CEEB;
+    border-color: #87CEEB;
+}
 .visible {
     visibility: visible;
 }
-
 .invisible {
     visibility: hidden;
 }
-
-
 #tabelaDeSimbolos thead {
     background-color: #ccc;
     margin: 15px;
@@ -33,12 +28,31 @@
     text-align: center;
     width: 100%;
 }
-
-
 tbody tr:hover {
     background-color: #ccc;
     color: black;
 }
 tbody {
     background-color: #eee;
+}
+#formAnalyzers ul li {
+    list-style: outside none none;
+}
+#notificacoes {
+    background-color: #600000;
+    color: white;
+    font-family: sans-serif;
+    font-size: 14px;
+    margin-top: 20px;
+    padding: 0.5px 15px;
+}
+.btn {
+    background-color: #4169e1;
+    border: 1px solid #4169e1;
+    color: white;
+    float: left;
+    font-family: sans-serif;
+    font-size: 16px;
+    margin: 10px 5px;
+    padding: 5px 10px;
 }

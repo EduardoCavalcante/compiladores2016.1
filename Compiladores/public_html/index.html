@@ -37,28 +37,31 @@
 
                 <span id="analyserEmpty" class="hidden">Selecione um analisador!</span>
 
-                <input type="submit" value="Ok" />
+                <input type="submit" value="Ok" class="btn" />
+                <button onclick="window.location.reload()" class="btn">Reload</button>
 
             </form>
+            
+            <div id="contentaAnalisadorLexico" class="hidden">
+                <table id="tabelaDeSimbolos">
+                        <thead>
+                            <th>Simbolo</th>
+                            <th>Type</th>
+                            <th>Descrição</th>
+                            <th>Ocorrencias</th>
+                            <th>Linha</th>
+                        </thead>
 
-            <table id="tabelaDeSimbolos">
-                    <thead>
-                        <th>Simbolo</th>
-                        <th>Type</th>
-                        <th>Descrição</th>
-                        <th>Ocorrencias</th>
-                        <th>Linha</th>
-                    </thead>
+                        <tbody>
 
-                    <tbody>
+                        </tbody>
 
-                    </tbody>
+                </table>
 
-            </table>
-
-            <div id="notificacoes">
-                
-            </div>
+                <div id="notificacoes">
+                    
+                </div>
+        </div>
 
         </div>
 

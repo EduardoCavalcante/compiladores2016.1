@@ -18,6 +18,7 @@ function selectAnalyzer(event) {
                             analisadorLexico.initialize();
                         }
                         document.getElementById("analyserEmpty").className = "hidden";
+                        document.getElementById("contentaAnalisadorLexico").className = "show";
                         withoutAnalyzers = false;
                     }
                 }
