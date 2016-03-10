@@ -13,40 +13,42 @@ analisadorLexico.printLines = function(){
 	}
 
 	analisadorLexico.tokens.forEach(function(currentLine){
-		var line = analisadorLexico.tokens.indexOf(currentLine);  
-	  	currentLine.forEach(function(token){
+		if(currentLine){
+			var line = analisadorLexico.tokens.indexOf(currentLine);  
+		  	currentLine.forEach(function(token){
 
-	  		if(line == analisadorLexico.tabelaDeSimbolos[token.nome].line[0]){
+		  		if(analisadorLexico.tabelaDeSimbolos[token.nome].line && line == analisadorLexico.tabelaDeSimbolos[token.nome].line[0]){
 
-		  		var tr = document.createElement("TR");
-		  		
-		  		var tdSimbolo = document.createElement("td");
-		  		tdSimbolo.innerHTML = token.nome;
+			  		var tr = document.createElement("TR");
+			  		
+			  		var tdSimbolo = document.createElement("td");
+			  		tdSimbolo.innerHTML = token.nome;
 
-		  		var tdType = document.createElement("td");
-		  		tdType.innerHTML = token.type;
+			  		var tdType = document.createElement("td");
+			  		tdType.innerHTML = token.type;
 
-		  		var tdDescricao = document.createElement("td");
-		  		tdDescricao.innerHTML = token.description;
+			  		var tdDescricao = document.createElement("td");
+			  		tdDescricao.innerHTML = token.description;
 
-		  		var tdLinha = document.createElement("td");
+			  		var tdLinha = document.createElement("td");
 
-		  		 tdLinha.innerHTML = analisadorLexico.tabelaDeSimbolos[token.nome] && 
-		  		 analisadorLexico.tabelaDeSimbolos[token.nome].line ? analisadorLexico.tabelaDeSimbolos[token.nome].line.join() : "";
-		  		
-		  		var tdOcorrencias = document.createElement("td");
-		  		tdOcorrencias.innerHTML = analisadorLexico.tabelaDeSimbolos[token.nome] && 
-		  		analisadorLexico.tabelaDeSimbolos[token.nome].ocorrencias;
+			  		 tdLinha.innerHTML = analisadorLexico.tabelaDeSimbolos[token.nome] && 
+			  		 analisadorLexico.tabelaDeSimbolos[token.nome].line ? analisadorLexico.tabelaDeSimbolos[token.nome].line.join() : "";
+			  		
+			  		var tdOcorrencias = document.createElement("td");
+			  		tdOcorrencias.innerHTML = analisadorLexico.tabelaDeSimbolos[token.nome] && 
+			  		analisadorLexico.tabelaDeSimbolos[token.nome].ocorrencias;
 
-		  		tr.appendChild(tdSimbolo);
-		  		tr.appendChild(tdType);
-		  		tr.appendChild(tdDescricao);
-		  		tr.appendChild(tdOcorrencias);
-		  		tr.appendChild(tdLinha);
-		  		tbody.appendChild(tr);
-	  		}
+			  		tr.appendChild(tdSimbolo);
+			  		tr.appendChild(tdType);
+			  		tr.appendChild(tdDescricao);
+			  		tr.appendChild(tdOcorrencias);
+			  		tr.appendChild(tdLinha);
+			  		tbody.appendChild(tr);
+		  		}
 
-	  	});	  			  
+		  	});	  
+	  	}			  
 	});
 
 }
@@ -81,6 +83,80 @@ analisadorLexico.searchSymbol = function(caracter){
 	}
 }
 
+analisadorLexico.searchSymbolTable = function(caracter){
+	var result = [0,0];
+	var stop = false;
+	for(var i =0; i < analisadorLexico.tokens.length;i++){
+		var line = analisadorLexico.tokens[i];
+			
+			if(stop){
+				break;
+			}
+			
+			if(!line){
+				continue;
+			}
+
+			for(var j=0;j< line.length;j++){
+				if(line[j].nome == caracter){
+					result = [i,j];
+					stop = true;
+					break;
+				}
+			}	
+	}
+
+	return result;
+
+}
+
+analisadorLexico.disableCode = function(){
+	var startComentary = analisadorLexico.searchSymbolTable("/*");
+	var finishComentary = analisadorLexico.searchSymbolTable("*/");
+
+
+	if(startComentary[0] == finishComentary[0]){
+		if(startComentary[1] < finishComentary[1]){
+			var firstToken = analisadorLexico.tokens[startComentary[0]][startComentary[1]];
+			var line = finishComentary[0];
+
+			for(var i = startComentary[1] ; i < finishComentary[1];i++){
+				var token = analisadorLexico.tokens[startComentary[0]][0];
+				analisadorLexico.tokens[startComentary[0]].splice(0,1);
+				analisadorLexico.tabelaDeSimbolos[token.nome].line.splice(0,1);
+				analisadorLexico.tabelaDeSimbolos[token.nome].ocorrencias --;
+			}
+			analisadorLexico.tokens[0].splice(0,0,firstToken);
+
+		}
+	}else{
+		var diff = finishComentary[0] - startComentary[0];
+		var firstToken = analisadorLexico.tokens[startComentary[0]][startComentary[1]];
+		for(var i =startComentary[0]; i < finishComentary[0]; i++){
+			if(analisadorLexico.tokens[i]){
+				for(var j = 0; j < analisadorLexico.tokens[i].length;j++){
+				var token = analisadorLexico.tokens[i][j];
+				analisadorLexico.tabelaDeSimbolos[token.nome].line.splice(0,1);
+				analisadorLexico.tabelaDeSimbolos[token.nome].ocorrencias --;
+				}
+			}
+			analisadorLexico.tokens.splice(i,1,undefined);
+		}
+		if(typeof  analisadorLexico.tokens[0]== 'undefined' ){
+			analisadorLexico.tokens[0] = [];
+		}
+		analisadorLexico.tokens[0].splice(0,0,firstToken);
+		
+		var line = finishComentary[0];
+		for(var i = 0; i < finishComentary[1];i++){
+				var token = analisadorLexico.tokens[line][0];
+				analisadorLexico.tokens[line].splice(0,1);
+				analisadorLexico.tabelaDeSimbolos[token.nome].line.splice(0,1);
+				analisadorLexico.tabelaDeSimbolos[token.nome].ocorrencias --;
+		}
+	}
+}
+
 analisadorLexico.findComentary = function(){
 	
 	analisadorLexico.tokens.forEach(function(contentLine){
@@ -108,8 +184,10 @@ analisadorLexico.findComentary = function(){
 				      	analisadorLexico.tabelaDeSimbolos[contentLine[i].nome].ocorrencias = analisadorLexico.tabelaDeSimbolos[contentLine[i].nome].ocorrencias - 1; 
 				      	analisadorLexico.tabelaDeSimbolos[contentLine[i -1].nome].ocorrencias = analisadorLexico.tabelaDeSimbolos[contentLine[i].nome].ocorrencias - 1; 
 
-				      	analisadorLexico.tokens[line].splice(i -1 , 2);
-				      	analisadorLexico.addToken(token,line);
+				      	analisadorLexico.tokens[line].splice(i -1 , 2,token);
+				      	analisadorLexico.updateSymbolTable(token,line);
+		
+				      	//analisadorLexico.addToken(token,line);
 				      	i = i -1;
 				      }
 				}    
@@ -276,7 +354,9 @@ analisadorLexico.parser = function () {
 	});
 	analisadorLexico.findComentary();
 	analisadorLexico.findErrors();
+	analisadorLexico.disableCode();
 	analisadorLexico.printLines();
+
 };
 /*
 1- inicializa as listas de caracter e de tokens
