@@ -11,9 +11,7 @@ function selectAnalyzer(event) {
 
             if (analyzers.length > 0) {
                 var withoutAnalyzers = true;
-                for (var i = 0; i < analyzers.length; i++) {
-                    var currentAnalyzer = analyzers[i];
-                    if (currentAnalyzer.checked) {
+                    if (analyzers[0].checked && (!analyzers[1].checked && !analyzers[2].checked) ) {
                         if(lexicalAnalyzer){
                             analisadorLexico.initialize();
                         }
@@ -21,7 +19,18 @@ function selectAnalyzer(event) {
                         document.getElementById("contentaAnalisadorLexico").className = "show";
                         withoutAnalyzers = false;
                     }
-                }
+
+                    if (analyzers[1].checked && !analyzers[2].checked ) {
+                        if(lexicalAnalyzer && syntacticAnalyzer){
+                            analisadorLexico.initialize(analisadorSintatico);
+                            
+                            
+                        }
+                        document.getElementById("analyserEmpty").className = "hidden";
+                        document.getElementById("contentaAnalisadorLexico").className = "show";
+                        withoutAnalyzers = false;
+                    }
+                
                 if (withoutAnalyzers) {
                     document.getElementById("analyserEmpty").className = "show";
                 }

@@ -49,7 +49,12 @@ analisadorLexico.printLines = function(){
 
 		  	});	  
 	  	}			  
-	});
+	});	
+	
+	if(analisadorLexico.proximoAnalisador){
+		analisadorLexico.proximoAnalisador.initialize(analisadorLexico);
+	}
+	
 
 }
 analisadorLexico.cleanNotifications = function(){
@@ -366,8 +371,9 @@ analisadorLexico.parser = function () {
 1- inicializa as listas de caracter e de tokens
 2- chama o método parser (Linha 177)
 */
-analisadorLexico.initialize = function () {
+analisadorLexico.initialize = function (analisadorSintatico) {
 	analisadorLexico.tabelaDeSimbolos = [];
+	analisadorLexico.proximoAnalisador = analisadorSintatico;
 	analisadorLexico.tokens = [];
 	analisadorLexico.parser();	
 };
