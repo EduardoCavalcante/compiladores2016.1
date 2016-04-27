@@ -1,0 +1,102 @@
+BNF Grammar for C-Minus Traduzida
+
+1. program -> declaration-list 
+Um programa é formado  por uma lista de declarações.
+
+2. declaration-list -> declaration-list declaration | declaration 
+Uma lista de declaração é composta por uma lista de declaração de declaração ou uma simples declaração.
+
+3. declaration -> var-declaration | fun-declaration 
+Uma declaração pode ser de variável ou de função.
+
+4. var-declaration -> type-specifier ID ; | type-specifier ID [ NUM ] ;
+Uma declaração de variável é formado por um tipo específico e um identificador seguido de ; ou um tipo específico e um identificador vetor numérico seguido por ;
+
+5. type-specifier -> int | String 
+Tipo específico pode ser int ou String.
+
+6. fun-declaration -> type-specifier ID ( params ) compound-stmt 
+Declaração de função é feita utilizando um tipo específico, seguido por um identificador, seguido por parâmentros dentro de parênteses e seguido por instruções.
+
+7. params -> param-list | void
+Os parâmetros são uma lista de parâmetros ou void;
+
+8. param-list -> param-list , param | param 
+A lista de parâmetros pode ser um ou mais parâmetros separados por vírgula.
+
+9. param -> type-specifier ID | type-specifier ID [ ]
+Um parametro é formado por um tipo especifico seguido por identificador ou um tipo especifico seguido por identificador em vetor;
+
+10. compound-stmt -> { local-declarations statement-list }
+Uma composição de instruções é formado por declarações locais de uma lista de instruções envolvidos por chaves;
+
+11. local-declarations -> local-declarations var-declarations | empty 
+Declarações locais é formado  por declarações locais de declarações de variáveis ou nenhuma declaração.
+
+12. statement-list -> statement-list statement | empty 
+A lista instrução é formada por uma lista de instrução de instruções ou nenhuma instrução.
+
+13. statement -> expression-stmt | compound-stmt | selection-stmt | iteration-stmt | return-stmt 
+Instrução pode ser uma intrução de uma expressão, uma composição de intruções, uma seleção de instruções, uma iteração de instrução ou um retorno de uma instrução.
+
+14. expression-stmt -> expression ; | ;
+Uma expressão de instrução é uma expressão seguida de ; ou simplesmente ;
+
+15. selection-stmt -> if ( expression ) statement | if ( expression ) statement else statement 
+Uma seleção de intruções é formado por if seguido por expressão entre parênteses e instruções ou por if seguido por expressão entre parênteses e instruções, depois um else e logo em seguida mais instruções do else.
+
+16. iteration-stmt -> while ( expression ) statement 
+Uma iteração de instrução é formado por while seguido por uma expressão entre parênteses e depois suas instruções.
+
+17. return-stmt -> return ; | return expression ;
+O retorno de instrução é simplemente return ; ou return seguido por uma expressão finalizado por ;
+
+18. expression -> var = expression | simple-expression 
+Uma expressão é uma variável que recebe o valor de uma expressão ou uma simples expressão.
+
+19. var -> ID | ID [ expression ]
+Uma variável pode ser declarada apenas com identificador ou o identificador e uma expressão que a segue entre cochetes.
+
+20. simple-expression -> additive-expression relop additive-expression | additive-expression 
+Uma expressão simples é formado por uma comparação utilizando operadores relacionais de expressões de soma ou apenas uma expressão aditiva.
+
+21. relop -> <= | < | > | >= | == | !=
+Os operadores relacionais são: <= | < | > | >= | == | !=
+
+22. additive-expression -> additive-expression addop term | term 
+Uma expressão aditiva é composta por uma soma ou subtração de uma expressão aditiva por outro termo, ou apenas um termo.
+
+23. addop -> + | -
+Os operadores de adição são: + | -
+
+24. term -> term mulop factor | factor 
+Um termo é uma multiplicação/divisão de um termo por um fator ou apenas um fator.
+
+25. mulop -> * | /
+Os operadores multiplicativos são: * | /
+
+26. factor -> ( expression ) | var | call | NUM
+Um fator pode ser uma expressão entre chaves, um variável, um chamado ou um numérico.
+
+27. call -> ID ( args )
+Um chamado é feito com o identificador e argumentos entre chaves
+
+28. args -> arg-list | empty 
+Os argumentos podem ser uma lista de argumentos ou vazio.
+
+29. arg-list -> arg-list , expression | expression 
+A lista de argumentos é formada por uma lista de argumentos seguido por uma expressão ou simplesmente uma expressão.
+
+Keywords: else if int return void while
+
+Special symbols: + - * / < <= > >= == != = ; , ( ) [ ] { } /* */
+
+ID = letter letter*
+
+NUM = digit digit*
+
+letter = a | .. | z | A | .. | Z 
+
+digit = 0 | .. | 9 
+
+Comments: /* ... */
