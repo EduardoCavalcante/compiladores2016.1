@@ -1,14 +1,7 @@
-/*scanf(n);
-
-f = fat(n); 
-
-printf('FAT '=,F);
-
-*/
-function FAT(int i){
-	if(i == 1){
-		fat = 1
-	}else{
-		fat = i * FAT(i - 1);
-	}	
-}
+/* Teste de erros */
+void main(){
+	int a, b, c, a=5;
+	a=d*
+	b = a ^ d;
+	c = (a+b * (c-d);
+	print ) c ( ;
