@@ -1,4 +1,5 @@
-/* Teste de erros */
+/* Teste de erros Analisador Sintático */
+
 void main(){
 	int a, b, c, a=5;
 	a=d*
