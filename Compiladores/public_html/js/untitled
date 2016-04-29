@@ -1,0 +1,8 @@
+var analisadorSintatico = {} ||analisadorSintatico;
+
+
+analisadorSintatico.initialize = function(analisadorLexixo){
+
+var scanner = analisadorLexixo;
+	
+}

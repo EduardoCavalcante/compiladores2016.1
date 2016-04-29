@@ -1,5 +1,18 @@
 var BNFRoles = BNFRoles || {};
 
+BNFRoles.varDeclaration = function(val){
+	
+		var singleRegEx   =   /^(int|string)\s*[a-z]\s*(\,\s*[a-z])*;$/
+		var complexRegEx2 =   /^(int|string)\s*[a-z]\s*\[[0-9]+\]\s*;$/
+		
+		if(singleRegEx.test(val) || complexRegEx2.test(val)){
+			return true;
+		}
+
+
+	return false;
+
+};
 
 BNFRoles.ID = function(val){
 
@@ -14,6 +27,10 @@ BNFRoles.SpecialSymbols = function(val){
 	return /^(\+|\-|\*|\/|<|<=|>|>=|==|!=|=|;|,|\(|\)|\[|\]|\{|\}|\/\*|\*\/)$/.test(val);
 };
 
+BNFRoles.addop = function(){
+	var rgex = /(^[0-9]+$)|(^[a-z]+$|[A-Z])\s*(\+|\-)\s(^[0-9]+$)|(^[a-z]+$|[A-Z]+$)/
+}
+
 BNFRoles.mulop = function(){
 	var rgex = /^(\*|\/)$/
 };
@@ -22,9 +39,8 @@ BNFRoles.relop = function(){
 	var rgex = /<=|<|>|>=|==|!=/
 }
 
-BNFRoles.addop = function(){
-	var rgex = /(\+|\-)/
-}
+
+
 
 BNFRoles.Keywords = function(){
 	var rgex = /^(else|if|int|return|void|while)$/
@@ -34,19 +50,11 @@ BNFRoles.var = function(val){
 	
 	//var -> ID | ID [ expression ]
 
-	if(val.length == 1){
-		return BNFRoles.ID(val[0].nome);
-	} else if(val.length == 4){
-		if(BNFRoles.ID(val[0].nome)){
-			if(BNFRoles.SpecialSymbols(val[1].nome) && val[1].nome == "["){
-
-				if(BNFRoles.SpecialSymbols(val[3].nome) && val[3].nome == "]"){
-					return true;
-				}
-			}
-		}
+	if(BNFRoles.ID(val)){
+		return true;
 	}
-	return false;
+
+	return /^([a-z]+|[A-Z]+)=\[([a-z]*|[A-Z]*|[0-9])\];$/.test(val) 
 };
 
 BNFRoles.adtiveExpression = function(val){
@@ -183,31 +191,68 @@ BNFRoles.simpleExpression = function(val){
 
 };
 
-BNFRoles.varDeclaration = function(token,val){
+BNFRoles.funDeclaration = function(token,val){
 	
-	if(token.type == id){
-		var singleRegEx   =   /^(int|string)\s*[a-z]\s*;$/
-		var complexRegEx2 =   /^(int|string)\s*[a-z]\s*\[[0-9]+\]\s*;$/
-		
-		if(singleRegEx.test(val) || complexRegEx2.test(val)){
-			return true;
+	if(val.length == 6){
+		if(BNFRoles.typeSpecifier(val[0].nome)){
+			if(BNFRoles.ID(val[1].nome)){
+				if(BNFRoles.SpecialSymbols(val[2].nome) && val[2].nome == "("){
+					if(BNFRoles.params(val[3].nome)){
+						if(BNFRoles.SpecialSymbols(val[4].nome) && val[4].nome == ")"){
+							if(BNFRoles.compoundStmt(val[5].nome)){
+								return true;
+							}
+						}
+					}
+				}
+			}
 		}
-
 	}
 
 	return false;
-
 };
 
-BNFRoles.funcDeclaration = function(token,val){
-	
-	if(token.type == id){
-		var firstTest   = /^(int|string)\s*\(\s/
-		var secondTest  = "";
-		var thirdTest   = /\s*\)\s*\{/
+BNFRoles.compoundStmt = function(token,val){
 
+	if(val.length == 4){
+		if(BNFRoles.SpecialSymbols(val[0].nome) && val[0].nome  == "{"){
+			if(BNFRoles.localDeclarations(val[1].nome)){
+				if(BNFRoles.statementList(val[2].nome)){
+					return true;
+				}
+			}
+		}	
+	}
+	return false;
+};
+
+BNFRoles.localDeclarations = function(token,val){
+	
+	if(val.length == 0){
+		return true;
 	}
 
+	if(val.length == 2){
+		if(BNFRoles.localDeclarations(val[0].nome)){
+			if(BNFRoles.varDeclarations(val[1].nome)){
+				return true;
+			}
+		}
+	}
+
+	return false;
+};
+BNFRoles.statementList = function(token,val){
+	if(val.length == 0){
+		return true;
+	}
+	if(val.length == 2){
+		if(BNFRoles.statementList(val[0].nome)){
+			if(BNFRoles.statement(val[1].nome)){
+				return true;
+			}
+		}
+	}
 };
 
 BNFRoles.params = function(token,val){
@@ -248,7 +293,34 @@ BNFRoles.typeSpecifier = function(token,val){
 
 
 BNFRoles.paramList = function(token,val){
+	
+	if(val.length == 1){
+		if(BNFRoles.param(val[0].nome)){
+			return true;
+		}
+	}
+	
+	if(val.length == 3){
+		if(BNFRoles.paramList(val[0].nome)){
+			if(BNFRoles.SpecialSymbols(val[1].nome) && val[1].nome == ","){
+				if(BNFRoles.param(val[2].nome)){
+					return true;
+				}
+			}
+		}
+	}
 
+	return false
+};
+
+BNFRoles.params = function(token,val){
+	if(BNFRoles.paramList(val[0])){
+		return true;
+	}
+	if(BNFRoles.Keywords(val[0].nome) && val[0].nome == "void"){
+		return true;
+	}
+	return false;
 };
 
 BNFRoles.param = function(token,val){
@@ -267,5 +339,5 @@ BNFRoles.param = function(token,val){
 	}
 	
 	return false;
-	
+
 };
