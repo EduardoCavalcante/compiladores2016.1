@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-void main() {
-	
-	int a,b,c,d=5;
-	a = d * 2;
-	b = a + d;
-	c = (a + b) * (c - d);
-	print(c);
-
-}
-=======
-/* Teste com código correto */
 
 void main(){
 	int a, b, c, d=5;
@@ -19,13 +7,3 @@ void main(){
 	print (c);
 }
 
-/* Teste de erros Analisador Sintático 
-
-void main(){
-	int a, b, c, a=5;
-	a=d*
-	b = a ^ d;
-	c = (a+b * (c-d);
-	print ) c ( ;
-*/
->>>>>>> abed232286f842bfd9727178f433a85ff83bc1f8

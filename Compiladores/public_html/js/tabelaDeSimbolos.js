@@ -16,27 +16,27 @@ typeSpecifier = {
 
 	'[' : {
 		nome : "[",
-		type : "specialSymbol",
+		type : "Special symbols",
 		description : "abre chochetes...",
 		nextSimbol : ["]"],
 	},	
 	']' : {
 		nome : "]",
-		type : "specialSymbol",
+		type : "Special symbols",
 		description : "fechaChochetes...",
 		nextSimbol : ["["],
 	},
 
 		'{' : {
 		nome : "{",
-		type : "specialSymbol",
+		type : "Special symbols",
 		description : "abre chaves",
 		nextSimbol : ["}"],
 	},
 	
 		'}' : {
 		nome : "}",
-		type : "specialSymbol",
+		type : "Special symbols",
 		description : "fecha chaves",
 		nextSimbol : ["{"],
 	},
@@ -132,14 +132,14 @@ typeSpecifier = {
 
 	'if' : {
 		nome : "if",
-		type : "palavra reservada",
+		type : "while",
 		description : "if",
 		
 	},
 
 	'else' : {
 		nome : "else",
-		type : "palavra reservada",
+		type : "while",
 		description : "else",
 		
 	},
@@ -185,13 +185,19 @@ typeSpecifier = {
 
 	'void' : {
 		nome : "void",
-		type : "palavra reservada",
+		type : "Keywords",
 		description : "void",
+	},
+
+	'while' : {
+		nome : "while",
+		type : "Keywords",
+		description : "while",
 	},
 
 	'return' : {
 		nome : "return",
-		type : "palavra reservada",
+		type : "Keywords",
 		description : "return",
 	},
 
