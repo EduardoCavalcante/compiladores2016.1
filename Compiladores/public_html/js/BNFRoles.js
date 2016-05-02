@@ -11,9 +11,16 @@ BNFRoles.num = function(val){
 	return /^\s*([0-9]+)\s*$/.test(val);
 }
 
-BNFRoles.SpecialSymbols = function(val){
-	return /^(\+|\-|\*|\/|<|<=|>|>=|==|!=|=|;|,|\(|\)|\[|\]|\{|\}|\/\*|\*\/)$/.test(val);
+BNFRoles.SpecialSymbols = function(search){
+	
+	if(search){
+	    return /\+|\-|\*|\/|<|<=|>|>=|==|!=|=|;|,|\(|\)|\[|\]|\{|\}|\/\*|\*\//;
+	}else{
+		return /(^\s*\+\s*$)|(^\s*\-\s*$)|(^\s*\*\s*$)|(^\s*\/\s*$)|(^\s*<\s*$)|(^\s*<=\s*$)|(^\s*>\s*$)|(^\s*>=\s*$)|(^\s*==\s*$)|(^\s*!=\s*$)|(^\s*=\s*$)|(^\s*;\s*$)|(^\s*\,\s*$)|(^\s*\(\s*$)|(^\s*\)\s*$)|(^\s*\[\s*$)|(^\s*\]\s*$)|(^\s*\{\s*$)|(^\s*\}\s*$)|(^\s\/\*\s*$)|(^\s*\*\/\s*$)/;
+	}
+
 };
+
 
 BNFRoles.typeSpecifier = function(search){
 
@@ -24,6 +31,31 @@ BNFRoles.typeSpecifier = function(search){
 	}
 
 }
+
+
+BNFRoles.param = function(val){
+	
+	if(val.match(BNFRoles.typeSpecifier(true)) && val.match(BNFRoles.typeSpecifier(true)).index == 0){
+		var _parts = [];
+		_parts[0] = val.substring(0,val.match(BNFRoles.typeSpecifier(true))[0].length);
+		_parts[1] = val.substring(val.match(BNFRoles.typeSpecifier(true))[0].length);
+
+		if(BNFRoles.ID(_parts[1])){			
+			return true;			
+		}
+
+		if(val.match(/\s*\[\s*\]\s*$/) && val.match(/\s*\[\s*\]\s*$/).index > 0){
+			var _subparts = [];
+			_subparts[0] = _parts[1].substring(0,_parts[1].match(/\s*\[\s*\]\s*$/).index);
+			_subparts[1] = _parts[1].substring(_parts[1].match(/\s*\[\s*\]\s*$/).index);
+
+			return BNFRoles.ID(_subparts[0]) && /\s*\[\s*\]\s*$/.test(_subparts[1]);
+		}
+
+	}
+
+	return false;
+};
 
 BNFRoles.addop = function(search){
 
@@ -76,8 +108,9 @@ BNFRoles.argList = function(val){
 			_parts[2] = val.substring(val.match(/\,/).index + 1);
 
 			var isArgsList = BNFRoles.argList(_parts[0]);
-			var isComma = BNFRoles.SpecialSymbols(_parts[1]) && _parts[1] == ",";
-			var isExpression = BNFRoles.expression(_parts[2]);
+			var isComma = _subparts[1].match(BNFRoles.SpecialSymbols(true)) && _parts[1].match(BNFRoles.SpecialSymbols(true)).index > -1  && _parts[1] == ",";
+			var isExpression = BNFRoles.ex
+			pression(_parts[2]);
 
 			return  isArgsList && isComma && isExpression;
 	}
@@ -115,9 +148,9 @@ BNFRoles.CALL = function(val){
 		_parts[3] = val.substring(val.match(/\)/).index);
 
 		var isVar = BNFRoles.var(_parts[0]);
-		var isStartExpression = BNFRoles.SpecialSymbols(_parts[1]) && _parts[1] == "(";
+		var isStartExpression = _parts[1].match(BNFRoles.SpecialSymbols(true)) && _parts[1].match(BNFRoles.SpecialSymbols(true)).index > -1  && _parts[1] == "(";
 		var isArgs =  BNFRoles.args(_parts[2])
-		var isFinishExpression = BNFRoles.SpecialSymbols(_parts[3]) && _parts[3] == ")";
+		var isFinishExpression = _parts[3].match(BNFRoles.SpecialSymbols(true)) && _parts[3].match(BNFRoles.SpecialSymbols(true)).index > -1  &&  _parts[3] == ")";
 		
 		return isVar && isStartExpression && isArgs && isFinishExpression;
 		
@@ -237,7 +270,7 @@ BNFRoles.expression = function(val){
 			_parts[1] = val.substring(val.indexOf("="),val.indexOf("=") + 1);
 			_parts[2] = val.substring(val.indexOf("=") + 1);
 
-			if(BNFRoles.var(_parts[0]) && BNFRoles.SpecialSymbols(_parts[1]) && _parts[1] == "="){
+			if(BNFRoles.var(_parts[0]) && _parts[1].match(BNFRoles.SpecialSymbols(true)) && _parts[1].match(BNFRoles.SpecialSymbols(true)).index > -1  && _parts[1] == "="){
 				return BNFRoles.expression(_parts[2]);
 			}else{
 				alert("erro");
@@ -251,6 +284,25 @@ BNFRoles.expression = function(val){
 
 
 // combinações de símbolos que tem o ; como finalizador!
+
+//14. expression-stmt -> expression ; | ; 
+
+BNFRoles.expressionStmt = function(val){
+	
+	if(/^\s*;\s*$/.test(val)){
+		return true;
+	}
+
+	if(/\s*;\s*$/.test(val)){
+		var _parts = [];
+		_parts[0] = val.substring(0,val.match(/\s*;\s*$/).index);
+		_parts[1] = val.substring(val.match(/\s*;\s*$/).index);
+
+		return BNFRoles.expression(_parts[0]);
+	}
+
+	return false;
+};
 
 BNFRoles.var = function(val){
 	
@@ -273,30 +325,21 @@ BNFRoles.varDeclaration = function(val){
 
 };
 
-
-
-BNFRoles.expressionStmt = function(val){
-	var singleRegEx = /^\s*;\s*$/;
-    var complexRegEx = BNFRoles.expression(val.substring(0,val.length - 1)) && singleRegEx.test(val.substring(val.length - 1))
-};
-
-// não testado.
-
 BNFRoles.returnStmt = function(val){
 
-	if(BNFRoles.Keywords.test(val[0].nome) && val[0].nome == "return"){
-		if(val.length == 2){
-			if(BNFRoles.SpecialSymbols(val[1].nome) && val[1].nome == ";"){
-				return true
-			}
-		}
-		if(val.length == 3){
-			if(BNFRoles.expression(val[1].nome)){
-				if(BNFRoles.SpecialSymbols(val[2].nome) && val[2].nome == ";"){
-				return true
-				}
-			}
-		}
+	if(/^\s*return{1}\s*;{1}\s*$/.test(val)){
+		return true
+	}
+
+	if(/^\s*return{1}\s*/.test(val) && /\s*;{1}\s*$/.test(val)){
+
+		var _parts = [];
+		_parts[0] = val.substring(0, val.match(/^\s*return{1}\s*/).index + val.match(/^\s*return{1}\s*/)[0].length );
+		_parts[1] = val.substring(val.match(/^\s*return{1}\s*/).index  + val.match(/^\s*return{1}\s*/)[0].length, val.match(/\s*;{1}\s*$/).index);
+		_parts[2] = val.substring(val.match(/\s*;{1}\s*$/).index);
+
+		return BNFRoles.expression(_parts[1]);
+
 	}
 
 	return false;
@@ -417,20 +460,4 @@ BNFRoles.params = function(token,val){
 	return false;
 };
 
-BNFRoles.param = function(token,val){
-
-	if(BNFRoles.typeSpecifier(val[0].nome)){
-		if(BNFRoles.ID(val[1].nome)){
-			if(val.length == 2){
-				return true;
-			}
-			if(BNFRoles.SpecialSymbols(val[2].nome) && val[2].nome == "["){
-				if(BNFRoles.SpecialSymbols(val[3].nome) && val[3].nome == "]"){
-					return true;
-				}
-			}
-		}
-	}
-	
-	return false;
-}; */
+ */
