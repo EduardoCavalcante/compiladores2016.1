@@ -21,6 +21,10 @@ BNFRoles.SpecialSymbols = function(search){
 
 };
 
+BNFRoles.Comments = function(val){
+	return /^\s*\/\*\s*\*\/$/.test(val)
+}
+
 
 BNFRoles.typeSpecifier = function(search){
 
@@ -291,6 +295,34 @@ BNFRoles.simpleExpression = function(val){
 
 };
 
+BNFRoles.statement = function(val){
+	return true;
+}
+
+BNFRoles.iterationStmt = function(val){
+	var singleRegEx = /^\s*while\s*\(\s*/
+
+	if(singleRegEx.test(val)){
+		if(/\(/.test(val) && /\)\{/.test(val)){
+			if(val.match(/\(/).index < val.match(/\)/).index){
+				var _parts = [];
+				 _parts[0] = val.substring(0,val.match(/^\s*while\s*/)[0].length);
+				 _parts[1] = val.substring(val.match(/^\s*while\s*/)[0].length,val.match(/\(/).index + 1);
+				 _parts[2] = val.substring(val.match(/\(/).index + 1,val.match(/\)\{/).index);
+				 _parts[3] = val.substring(val.match(/\)\{/).index,val.match(/\)/).index + 1);
+				 _parts[4] = val.substring(val.match(/\)\{/).index + 1);
+
+				 return /^\s*while\s*$/.test(_parts[0]) && /^\($/.test(_parts[1]) 
+				 	&& BNFRoles.expression(_parts[2]) && /^\)$/.test(_parts[3]) 
+					&& BNFRoles.statement(_parts[4]);
+			}
+		}
+	}
+
+	return false;
+
+};
+
 BNFRoles.expression = function(val){
 
 		if(val.indexOf("=") > -1){
@@ -313,8 +345,6 @@ BNFRoles.expression = function(val){
 
 
 // combinações de símbolos que tem o ; como finalizador!
-
-//14. expression-stmt -> expression ; | ; 
 
 BNFRoles.expressionStmt = function(val){
 	
@@ -342,11 +372,79 @@ BNFRoles.var = function(val){
 	return /^([a-z]+|[A-Z]+)\[([a-z,[A-Z]*|[0-9])\];$/.test(val) 
 };
 
-BNFRoles.varDeclaration = function(val){
+BNFRoles.declarationList = function(val){
+
+	if(BNFRoles.declararion(val)){
+		return true;
+	}
+
+
+
+
+	return false;
+
+};
+
+BNFRoles.funDeclaration = function(val){
+
+	if(/^\s*(int|string)\s*([a-z,A-Z]+)\s*\(\s*/.test(val)){
+		var _parts = [];
+		_parts[0] = val.substring(0,val.match(/^\s*(int|string)\s*/)[0].length);
+		if(/\)/.test(val) && _parts[0]){
+			if(val.match(/\(/).index < val.match(/\)/).index){
+				_parts[1] = val.substring(_parts[0].length,val.match(/\(/).index);
+				_parts[2] = val.substring(val.match(/\(/).index, val.match(/\(/).index + 1);
+				_parts[3] = val.substring(val.match(/\(/).index + 1,val.match(/\)/).index);	
+				_parts[4] = val.substring(val.match(/\)/).index,val.match(/\)/).index + 1);
+				_parts[5] = val.substring(val.match(/\)/).index + 1);
+
+				if(BNFRoles.typeSpecifier(_parts[0]) && BNFRoles.ID(_parts[1]) 
+					&& /^\($/.test(_parts[2]) && BNFRoles.params(_parts[3]) && /^\)$/.test(_parts[4])
+					&& BNFRoles.compoundStmt(_parts[5])){
+					return true
+				}
+
+				console.log("test");	
+			}
+		}
+	}
+	return false;
+
+};
+
+BNFRoles.program = function(val){
+	return BNFRoles.declarationList(val);
+}
+
+BNFRoles.compoundStmt = function(token,val){
+	//10. compound-stmt -> { local-declarations statement-list } 
+	return true;
+};
+
+
+
+
+BNFRoles.declararion = function(val){
+
 	
-		var singleRegEx   =   /^(int|string)\s*[a-z]\s*(\,\s*[a-z])*;$/
-		var complexRegEx2 =   /^(int|string)\s*[a-z]\s*\[[0-9]+\]\s*;$/
-		
+	if(BNFRoles.varDeclaration(val) || BNFRoles.funDeclaration(val)){
+		return true;
+	}
+	
+	return false;
+	
+};
+
+BNFRoles.varDeclaration = function(val){
+		/*					  	
+		var singleRegEx   =   /^\s*(int|string)\s*[a-z]\s*(\,\s*((int|string)\s*[a-z]*)\s*)*;$/
+		var complexRegEx2 =   /^\s*(int|string)\s*[a-z]\s*\[[0-9]+\]\s*(\,\s*(int|string)\s*[a-z,A-Z]\s*\[[0-9]+\]\s*)*;$/
+		*/
+
+		var singleRegEx   =   /^\s*(int|string)\s*[a-z]\s*;$/
+		var complexRegEx2 =   /^\s*(int|string)\s*[a-z]\s*\[[0-9]+\]\s*;$/
+
+
 		if(singleRegEx.test(val) || complexRegEx2.test(val)){
 			return true;
 		}
@@ -377,43 +475,6 @@ BNFRoles.returnStmt = function(val){
 
 
 /*
-
-
-BNFRoles.funDeclaration = function(token,val){
-	
-	if(val.length == 6){
-		if(BNFRoles.typeSpecifier(val[0].nome)){
-			if(BNFRoles.ID(val[1].nome)){
-				if(BNFRoles.SpecialSymbols(val[2].nome) && val[2].nome == "("){
-					if(BNFRoles.params(val[3].nome)){
-						if(BNFRoles.SpecialSymbols(val[4].nome) && val[4].nome == ")"){
-							if(BNFRoles.compoundStmt(val[5].nome)){
-								return true;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	return false;
-};
-
-BNFRoles.compoundStmt = function(token,val){
-
-	if(val.length == 4){
-		if(BNFRoles.SpecialSymbols(val[0].nome) && val[0].nome  == "{"){
-			if(BNFRoles.localDeclarations(val[1].nome)){
-				if(BNFRoles.statementList(val[2].nome)){
-					return true;
-				}
-			}
-		}	
-	}
-	return false;
-};
-
 BNFRoles.localDeclarations = function(token,val){
 	
 	if(val.length == 0){
