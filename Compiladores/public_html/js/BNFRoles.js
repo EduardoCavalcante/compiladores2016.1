@@ -32,6 +32,35 @@ BNFRoles.typeSpecifier = function(search){
 
 }
 
+BNFRoles.params = function(val){
+
+	if(BNFRoles.paramList(val) || /^\s*void\s*$/.test(val)){
+		return true;
+	}
+
+	return false;
+
+};
+
+
+BNFRoles.paramList = function(val){
+
+	if(BNFRoles.param(val)){
+		return true;
+	}
+
+	if(val.match(/\,/) && val.match(/\,/).index >0 ){
+		var _parts = [];
+		_parts[0] = val.substring(0,val.match(/\,/).index);
+		_parts[1] = val.substring(val.match(/\,/).index, val.match(/\,/).index + 1);
+		_parts[2] = val.substring(val.match(/\,/).index  +1);
+
+		return BNFRoles.paramList(_parts[0].trim()) && BNFRoles.param(_parts[2].trim());
+
+	}
+	return false;
+
+};
 
 BNFRoles.param = function(val){
 	

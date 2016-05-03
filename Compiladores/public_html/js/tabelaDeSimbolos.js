@@ -42,12 +42,12 @@ typeSpecifier = {
 	},
 		';' : {
 		nome : ";",
-		type : "specialSymbol",
+		type : "Special symbols",
 		description : "finalizador de linha",
 	},
 		'=' : {
 		nome : "=",
-		type : "specialSymbol",
+		type : "Special symbols",
 		description : "atribuicao",
 	},
 		'==' : {
